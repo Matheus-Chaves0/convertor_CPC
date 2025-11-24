@@ -6,8 +6,276 @@
     <title>Agente IA - Tradutor NL/CPC</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
-    <link rel="stylesheet" href="CSS/styles.css">
-    <link rel="stylesheet" href="CSS/animations.css">
+    <style>
+        :root {
+            --primary-red: #e63946;
+            --dark-red: #d00000;
+            --light-red: #ff6b6b;
+            --white: #ffffff;
+            --light-gray: #f8f9fa;
+            --medium-gray: #dee2e6;
+            --dark-gray: #6c757d;
+            --black: #212529;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--light-gray);
+            color: var(--black);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary-red), var(--dark-red));
+            color: var(--white);
+            padding: 2rem 0;
+            text-align: center;
+            border-radius: 0 0 20px 20px;
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .main-content {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .card {
+            flex: 1;
+            min-width: 300px;
+            background-color: var(--white);
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+        
+        .card-header {
+            background-color: var(--primary-red);
+            color: var(--white);
+            padding: 1rem 1.5rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .card-body {
+            padding: 1.5rem;
+        }
+        
+        .input-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--dark-gray);
+        }
+        
+        textarea, input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--medium-gray);
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+        
+        textarea:focus, input:focus {
+            outline: none;
+            border-color: var(--primary-red);
+        }
+        
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+        
+        .btn {
+            background-color: var(--primary-red);
+            color: var(--white);
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            transition: background-color 0.3s;
+        }
+        
+        .btn:hover {
+            background-color: var(--dark-red);
+        }
+        
+        .btn:disabled {
+            background-color: var(--dark-gray);
+            cursor: not-allowed;
+        }
+        
+        .result {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background-color: var(--light-gray);
+            border-radius: 8px;
+            border-left: 4px solid var(--primary-red);
+        }
+        
+        .result h3 {
+            margin-bottom: 0.5rem;
+            color: var(--dark-gray);
+        }
+        
+        .result-content {
+            font-family: monospace;
+            background-color: var(--white);
+            padding: 12px;
+            border-radius: 6px;
+            border: 1px solid var(--medium-gray);
+        }
+        
+        .info-section {
+            background-color: var(--white);
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+        }
+        
+        .info-section h2 {
+            color: var(--primary-red);
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+        
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .info-item {
+            background-color: var(--light-gray);
+            padding: 1.5rem;
+            border-radius: 8px;
+            border-left: 4px solid var(--primary-red);
+        }
+        
+        .examples {
+            background-color: var(--white);
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+        }
+        
+        .examples h2 {
+            color: var(--primary-red);
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+        
+        .example-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .example-card {
+            background-color: var(--light-gray);
+            padding: 1.5rem;
+            border-radius: 8px;
+            border: 1px solid var(--medium-gray);
+        }
+        
+        footer {
+            text-align: center;
+            padding: 2rem 0;
+            color: var(--dark-gray);
+            margin-top: 2rem;
+        }
+        
+        .loader {
+            display: none;
+            width: 30px;
+            height: 30px;
+            border: 4px solid var(--medium-gray);
+            border-top: 4px solid var(--primary-red);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 10px auto;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .error {
+            color: var(--dark-red);
+            background-color: rgba(230, 57, 70, 0.1);
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 1rem;
+            border-left: 4px solid var(--dark-red);
+        }
+        
+        .symbols-help {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+            justify-content: center;
+        }
+        
+        .symbol {
+            background-color: var(--light-gray);
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-family: monospace;
+            font-size: 0.9rem;
+            border: 1px solid var(--medium-gray);
+        }
+        
+        @media (max-width: 768px) {
+            .main-content {
+                flex-direction: column;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -48,6 +316,13 @@
                     <div class="input-group">
                         <label for="cpc-input">Digite uma fórmula CPC:</label>
                         <input type="text" id="cpc-input" placeholder="Ex: P → Q">
+                        <div class="symbols-help">
+                            <span class="symbol">∧ (e)</span>
+                            <span class="symbol">∨ (ou)</span>
+                            <span class="symbol">→ (se...então)</span>
+                            <span class="symbol">↔ (se e somente se)</span>
+                            <span class="symbol">¬ (não)</span>
+                        </div>
                     </div>
                     <button id="cpc-to-nl-btn" class="btn">
                         <i class="fas fa-arrow-right"></i> Traduzir para Português
@@ -109,8 +384,187 @@
         </div>
     </footer>
 
-    <script src="SCRIPTS/gemini-api.js"></script>
-    <script src="SCRIPTS/ui-handler.js"></script>
-    <script src="SCRIPTS/app.js"></script>
+    <script>
+        // Configuração da API
+        const API_KEY = 'AIzaSyAI5itLQEh58PFThNHNpmn3TKmEZYyj5kk';
+        const API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent';
+
+        // Elementos da página
+        const nlInput = document.getElementById('nl-input');
+        const nlToCpcBtn = document.getElementById('nl-to-cpc-btn');
+        const nlLoader = document.getElementById('nl-loader');
+        const nlResult = document.getElementById('nl-result');
+        const nlResultContent = document.getElementById('nl-result-content');
+        const nlError = document.getElementById('nl-error');
+        
+        const cpcInput = document.getElementById('cpc-input');
+        const cpcToNlBtn = document.getElementById('cpc-to-nl-btn');
+        const cpcLoader = document.getElementById('cpc-loader');
+        const cpcResult = document.getElementById('cpc-result');
+        const cpcResultContent = document.getElementById('cpc-result-content');
+        const cpcError = document.getElementById('cpc-error');
+
+        // Função para chamar a API Gemini
+        async function callGeminiAPI(prompt) {
+            try {
+                console.log('Enviando requisição para Gemini...');
+                
+                const response = await fetch(`${API_URL}?key=${API_KEY}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        contents: [{
+                            parts: [{
+                                text: prompt
+                            }]
+                        }]
+                    })
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`Erro na API: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                console.log('Resposta recebida:', data);
+                return data.candidates[0].content.parts[0].text.trim();
+            } catch (error) {
+                console.error('Erro ao chamar a API:', error);
+                throw error;
+            }
+        }
+
+        // Função para mostrar/ocultar elementos
+        function showElement(element) {
+            if (element) element.style.display = 'block';
+        }
+
+        function hideElement(element) {
+            if (element) element.style.display = 'none';
+        }
+
+        function showLoader(loader) {
+            if (loader) loader.style.display = 'block';
+        }
+
+        function hideLoader(loader) {
+            if (loader) loader.style.display = 'none';
+        }
+
+        function showError(errorElement, message) {
+            if (errorElement) {
+                errorElement.textContent = message;
+                showElement(errorElement);
+            }
+        }
+
+        // Traduzir de Português para CPC
+        async function translateToCPC() {
+            const text = nlInput.value.trim();
+            
+            if (!text) {
+                showError(nlError, 'Por favor, digite uma sentença em português.');
+                return;
+            }
+
+            // Mostrar loading e esconder resultados anteriores
+            showLoader(nlLoader);
+            hideElement(nlResult);
+            hideElement(nlError);
+
+            try {
+                const prompt = `Traduza a seguinte sentença em português para uma fórmula no Cálculo Proposicional Clássico (CPC). Use apenas os conectivos lógicos padrão: ∧ (e), ∨ (ou), → (se...então), ↔ (se e somente se), ¬ (negação). Use letras maiúsculas para proposições atômicas (P, Q, R, etc.). Forneça apenas a fórmula CPC, sem explicações adicionais.
+
+Sentença: "${text}"`;
+
+                const result = await callGeminiAPI(prompt);
+                
+                // Mostrar resultado
+                nlResultContent.textContent = result;
+                showElement(nlResult);
+                
+            } catch (error) {
+                showError(nlError, 'Erro ao traduzir. Tente novamente.');
+            } finally {
+                hideLoader(nlLoader);
+            }
+        }
+
+        // Traduzir de CPC para Português
+        async function translateToPortuguese() {
+            const formula = cpcInput.value.trim();
+            
+            if (!formula) {
+                showError(cpcError, 'Por favor, digite uma fórmula CPC.');
+                return;
+            }
+
+            // Mostrar loading e esconder resultados anteriores
+            showLoader(cpcLoader);
+            hideElement(cpcResult);
+            hideElement(cpcError);
+
+            try {
+                const prompt = `Traduza a seguinte fórmula do Cálculo Proposicional Clássico (CPC) para uma sentença em português natural. Use uma linguagem clara e direta.
+
+Fórmula CPC: "${formula}"`;
+
+                const result = await callGeminiAPI(prompt);
+                
+                // Mostrar resultado
+                cpcResultContent.textContent = result;
+                showElement(cpcResult);
+                
+            } catch (error) {
+                showError(cpcError, 'Erro ao traduzir. Tente novamente.');
+            } finally {
+                hideLoader(cpcLoader);
+            }
+        }
+
+        // Adicionar event listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Página carregada, configurando event listeners...');
+            
+            // Botão Português para CPC
+            nlToCpcBtn.addEventListener('click', translateToCPC);
+            
+            // Botão CPC para Português
+            cpcToNlBtn.addEventListener('click', translateToPortuguese);
+            
+            // Limpar erros ao digitar
+            nlInput.addEventListener('input', function() {
+                hideElement(nlError);
+                hideElement(nlResult);
+            });
+            
+            cpcInput.addEventListener('input', function() {
+                hideElement(cpcError);
+                hideElement(cpcResult);
+            });
+
+            // Animações iniciais
+            if (typeof gsap !== 'undefined') {
+                gsap.from('header', { y: -50, opacity: 0, duration: 0.8 });
+                gsap.from('.card', { y: 30, opacity: 0, duration: 0.6, stagger: 0.2, delay: 0.3 });
+            }
+            
+            console.log('Event listeners configurados com sucesso!');
+        });
+
+        // Fallback caso DOMContentLoaded não funcione
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', init);
+        } else {
+            init();
+        }
+
+        function init() {
+            console.log('Inicializando aplicação...');
+            // Os event listeners já foram configurados acima
+        }
+    </script>
 </body>
 </html>
