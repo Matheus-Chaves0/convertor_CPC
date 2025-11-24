@@ -1,101 +1,256 @@
-OBS: Por motivos de segurança, a chave API foi removida do index.html e que o codigo está configurado para receber a chave em tempo de execução. O index_demo.html está funcional no arquivo local
-(proteção da chave)
+# Tradutor NL/CPC - Conversor entre Linguagem Natural e Cálculo Proposicional Clássico
 
-### Como Executar o Código (Para Avaliação)
+## 📋 Sobre o Projeto
 
-1. **Baixe/Clone** o repositório.
-2. **Abra o arquivo `index.html`** diretamente em seu navegador (Chrome, Firefox, etc.).
-3. **INSERÇÃO DA CHAVE:** Para que a tradução funcione, é necessário **inserir manualmente** sua chave de API válida no seguinte local dentro do código JavaScript do arquivo `index.html`.
+Sistema web inteligente que realiza tradução bidirecional entre sentenças em português (Linguagem Natural) e fórmulas do Cálculo Proposicional Clássico (CPC), utilizando modelos de IA generativa do Google Gemini.
 
-   ```javascript
-   // Procure esta linha no bloco <script> e adicione a chave após 'key='
-   const GEMINI_API_URL = `...:generateContent?key=`;(linha 419)
+**🔗 Acesse o projeto:** [https://matheus-chaves0.github.io/convertor_CPC/](https://matheus-chaves0.github.io/convertor_CPC/)
 
-1. Visão Geral do Projeto
+---
 
-Este projeto implementa um Agente de Inteligência Artificial para Web capaz de traduzir bidirecionalmente sentenças em Linguagem Natural (Português) para Fórmulas do Cálculo Proposicional Clássico (CPC) e vice-versa.
+## 🏗️ Arquitetura do Sistema
 
-O objetivo é fornecer uma ferramenta didática e funcional para demonstrar a base da lógica formal em sistemas de IA
+### Diagrama de Funcionamento
 
-2. Arquitetura do Sistema e Funcionamento
+```
+┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
+│   INTERFACE     │    │   AGENTE IA      │    │   API GEMINI    │
+│   DO USUÁRIO    │◄──►│   TRADUTOR       │◄──►│   (Backend)     │
+│                 │    │                  │    │                 │
+│ • Input/Output  │    │ • Processamento  │    │ • Modelos LLM   │
+│ • Configuração  │    │ • Prompts        │    │ • Gemini 2.0/2.5│
+│ • Exemplos      │    │ • Validação      │    │ • GenerateContent│
+└─────────────────┘    └──────────────────┘    └─────────────────┘
+         │                       │                       │
+         └───────────────────────┼───────────────────────┘
+                                 │
+                     ┌───────────┴───────────┐
+                     │    ARMAZENAMENTO      │
+                     │     LOCAL (Web)       │
+                     │                       │
+                     │ • API Key             │
+                     │ • Configurações       │
+                     │ • Histórico           │
+                     └───────────────────────┘
+```
 
-A lógica de tradução é delegada ao modelo de linguagem de grande escala (LLM) do Google Gemini, enquanto a interface é tratada por HTML/JavaScript no cliente.
+### Componentes Principais
 
-Componentes:
+1. **Interface do Usuário**
+   - Frontend responsivo em HTML/CSS/JavaScript
+   - Duas vias de tradução: Português→CPC e CPC→Português
+   - Sistema de configuração de API Key
+   - Exemplos interativos
 
-Interface do Cliente (index.html): O front-end da aplicação, responsável por capturar a entrada do usuário (texto ou fórmula) e exibir os resultados. É construído com HTML, CSS (para o design) e JavaScript (para a interatividade).
+2. **Agente IA Tradutor**
+   - Sistema de prompts especializados
+   - Detecção automática de modelos disponíveis
+   - Tratamento de erros e fallback
+   - Extração inteligente de respostas
 
-Motor de Tradução (JavaScript / fetch): O JavaScript atua como o "Agente de Borda". Ele identifica o tipo de tradução (NL $\to$ CPC ou CPC $\to$ NL) e monta o prompt adequado.
+3. **Integração com Gemini API**
+   - Compatível com modelos Gemini 2.0/2.5
+   - Sistema de autenticação via API Key
+   - Versões suportadas: v1, v1beta, v1alpha
 
-LLM (Agente de IA Generativa): O modelo gemini-2.5-flash-preview-09-2025 (Google Gemini) é o núcleo da inteligência. Ele recebe o prompt e a instrução de sistema (SYSTEM_INSTRUCTION) para garantir que a tradução seja feita de acordo com as regras formais do CPC.
+4. **Armazenamento Local**
+   - Persistência da API Key no localStorage
+   - Cache de configurações otimizadas
+   - Preferências do usuário
 
-Conexão (API Call): A comunicação é feita via requisições HTTP (fetch) para o endpoint da API do Gemini. O sistema utiliza um mecanismo de backoff exponencial (4 tentativas) para garantir a robustez contra falhas de rede.
+---
 
-3. Estratégia de Tradução e Mapeamento
+## 🎯 Estratégia de Tradução
 
-A tradução é totalmente baseada em Instruções de Sistema (System Prompt) e Análise Semântica (LLM), e não em regras de Regex ou Parsing manual.
+### Metodologia de Mapeamento
 
-Regras do Agente (Definidas no SYSTEM_INSTRUCTION):
+#### Português → CPC
+**Regras de Tradução:**
+- **Conectivos lógicos:** 
+  - "e" → `∧`
+  - "ou" → `∨` 
+  - "se...então" → `→`
+  - "se e somente se" → `↔`
+  - "não" → `¬`
 
-O agente segue um protocolo rigoroso para garantir a consistência:
+- **Proposições atômicas:**
+  - Substantivos/frases → Letras maiúsculas (P, Q, R...)
+  - Contexto determina mapeamento
 
-Notação Fixa: Deve usar apenas os símbolos CPC ($\neg, \land, \lor, \to, \leftrightarrow$).
+- **Precedência:**
+  - `¬` (maior precedência)
+  - `∧`, `∨`
+  - `→`, `↔` (menor precedência)
 
-Estrutura de Resposta: A saída é formatada obrigatoriamente nas seções Proposições e Fórmula (ou Linguagem Natural).
+#### CPC → Português
+**Padrões de Saída:**
+- Fórmulas atômicas: "P", "Q", "R"
+- Conectivos traduzidos para português natural
+- Estruturação gramatical correta
+- Preservação de escopo com parênteses
 
-Tradução NL $\to$ CPC: A IA assume a função de Análise Semântica, mapeando partes da sentença (que representam ideias completas) para as letras proposicionais (P, Q, R) e, em seguida, unindo-as com os conectivos corretos.
+### Sistema de Prompts
 
-Tradução CPC $\to$ NL: A IA recebe a fórmula e as proposições (ou sugestões de proposições) e as converte em uma frase coerente e natural, corrigindo o erro de traduções literais como "P e Q".
+```javascript
+// Exemplo de prompt para Português → CPC
+const prompt = `TRADUZA esta frase para fórmula do Cálculo Proposicional Clássico.
 
-Exemplos de Input/Output com Análise
+FRASE: "${textoEntrada}"
 
-Tipo
+REGRAS:
+- Use símbolos: ∧ (e), ∨ (ou), → (se...então), ↔ (se e somente se), ¬ (não)
+- Use letras maiúsculas (P, Q, R...)
+- Não explique nem comente  
+- Responda SOMENTE com a fórmula
 
-Entrada (Input)
+FÓRMULA CPC:`;
+```
 
-Saída (Output Esperado)
+### Exemplos de Input/Output
 
-Análise de Acerto
+#### ✅ Casos de Sucesso
 
-NL $\to$ CPC
+**Exemplo 1: Tradução Simples**
+```
+Input: "Se está chovendo, então a rua está molhada"
+Output: P → Q
+Análise: ✅ Correto - Mapeamento claro de antecedente e consequente
+```
 
-"Se chover e fizer frio, então não vou sair de casa."
+**Exemplo 2: Conectivos Múltiplos**
+```
+Input: "Estudo e não chove"
+Output: P ∧ ¬Q
+Análise: ✅ Correto - Negação e conjunção bem traduzidas
+```
 
-Proposições: P: Chover; Q: Fazer frio; R: Vou sair de casa. Fórmula: (P ∧ Q) → ¬R
+**Exemplo 3: Estrutura Complexa**
+```
+Input: "Se estudo e não chove, então vou ao parque ou fico em casa"
+Output: (P ∧ ¬Q) → (R ∨ S)
+Análise: ✅ Correto - Precedência e escopo preservados
+```
 
-Acerto: Identifica os conectivos de maior precedência (∧) e a negação (¬), aplicando a implicação corretamente.
+**Exemplo 4: CPC → Português**
+```
+Input: P ∧ Q
+Output: "P e Q"
+Análise: ✅ Correto - Tradução direta e clara
+```
 
-NL $\to$ CPC (Complexo)
+#### ❌ Casos de Erro/Limitação
 
-"Vou estudar se, e somente se, o café estiver forte."
+**Exemplo 1: Ambiguidade Semântica**
+```
+Input: "O gato está no tapete ou debaixo da mesa"
+Output Possível: P ∨ Q
+Análise: ⚠️ Limitação - Não captura exclusividade mútua (XOR)
+```
 
-Proposições: P: Vou estudar; Q: O café está forte. Fórmula: P ↔ Q
+**Exemplo 2: Expressões Idiomáticas**
+```
+Input: "Chove canivetes"
+Output Possível: P
+Análise: ⚠️ Limitação - Perde o sentido figurativo da expressão
+```
 
-Acerto: Reconhece a bicondicionalidade ("se, e somente se") que exige o conectivo 
+**Exemplo 3: Contexto Implícito**
+```
+Input: "Se chover, cancelamos"
+Output Possível: P → Q
+Análise: ⚠️ Limitação - Assume contexto não explícito na frase
+```
 
-CPC $\to$ NL
+---
 
-(P ∨ Q) ∧ ¬R
+## ⚠️ Limitações e Possibilidades de Melhoria
 
-Proposições: P: A porta está aberta; Q: A luz está acesa; R: O alarme está ligado. Linguagem Natural: A porta está aberta ou a luz está acesa, e o alarme não está ligado.
+### Limitações Atuais
 
-Acerto: Interpreta corretamente a ordem de precedência implícita nos parênteses e constrói uma frase natural.
+1. **Dependência de API Externa**
+   - Requer conexão internet
+   - Sujeito a limites de quota/custos
+   - Latência variável
 
-4. Limitações e Possibilidades de Melhoria
+2. **Modelos de Linguagem**
+   - Inconsistências ocasionais nas respostas
+   - Sensibilidade à formulação dos prompts
+   - Não deterministico
 
-Limitações Atuais:
+3. **Complexidade Semântica**
+   - Dificuldade com ambiguidades
+   - Expressões idiomáticas e figurativas
+   - Contexto implícito não capturado
 
-Vieses e Ambiguidade: A IA pode cometer erros ao lidar com sentenças ambíguas ou contextos muito complexos, pois a atribuição de P, Q, R é subjetiva e depende do treinamento do LLM.
+4. **Escopo Proposicional**
+   - Limitado a lógica proposicional
+   - Não suporta quantificadores (∀, ∃)
+   - Não lida com relações ou predicados
 
-Dependência da API: A funcionalidade é 100% dependente da conexão com o serviço Gemini. O erro 403 (autenticação) inviabiliza a ferramenta.
+### Possibilidades de Melhoria
 
-Escopo: Limitado ao Cálculo Proposicional Clássico (CPC); não lida com quantificadores ($\forall, \exists$) do CQC.
+#### 1. Melhorias Técnicas
+- [ ] **Sistema Híbrido**: Combinar regras baseadas com IA
+- [ ] **Cache Local**: Armazenar traduções frequentes
+- [ ] **Validação Sintática**: Verificar fórmulas CPC geradas
+- [ ] **Múltiplos Provedores**: OpenAI, Claude como fallback
 
-Possibilidades de Melhoria:
+#### 2. Expansão Funcional
+- [ ] **Lógica de Primeira Ordem**: Suporte a quantificadores
+- [ ] **Tabelas Verdade**: Geração automática
+- [ ] **Verificação de Equivalências**: Comparação de fórmulas
+- [ ] **Histórico de Traduções**: Sessões de trabalho
 
-Integração CQC: Ampliar o modelo para incluir lógica de primeira ordem (CQC), permitindo a tradução de frases com "Todo" e "Algum".
+#### 3. Interface e UX
+- [ ] **Editor Visual**: Arrastar e soltar conectivos
+- [ ] **Dicionário de Proposições**: Mapeamento personalizado
+- [ ] **Explicações Passo a Passo**: Como a tradução foi feita
+- [ ] **Modo Offline**: Funcionalidades básicas sem internet
 
-Feedback Loop: Adicionar uma seção onde o usuário pode corrigir a tradução da IA, usando essa correção como feedback para refinar o prompt do Agente.
+#### 4. Robustez
+- [ ] **Tratamento de Erros Avançado**: Sugestões de correção
+- [ ] **Validação de Entrada**: Verificação pré-IA
+- [ ] **Sistema de Feedback**: Aprendizado com correções
+- [ ] **Benchmarking**: Testes automatizados de qualidade
 
-Validação Visual: Adicionar uma Tabela Verdade interativa para que o usuário possa verificar o valor de verdade da fórmula CPC gerada.
+---
 
+## 🚀 Como Usar
+
+1. **Acesse**: [https://matheus-chaves0.github.io/convertor_CPC/](https://matheus-chaves0.github.io/convertor_CPC/)
+2. **Configure**: Insira sua API Key do Google Gemini
+3. **Traduza**: Use as caixas de texto para conversão bidirecional
+4. **Experimente**: Teste com os exemplos fornecidos
+
+### Requisitos
+- Navegador moderno com JavaScript
+- API Key do Google Gemini (gratuita)
+- Conexão internet
+
+---
+
+## 📊 Status do Projeto
+
+**✅ Funcionalidades Implementadas:**
+- [x] Tradução bidirecional NL/CPC
+- [x] Interface web responsiva
+- [x] Sistema de configuração de API
+- [x] Exemplos interativos
+- [x] Suporte a modelos Gemini 2.0/2.5
+
+**🔄 Em Desenvolvimento:**
+- [ ] Sistema de validação de fórmulas
+- [ ] Histórico de traduções
+- [ ] Exportação de resultados
+
+---
+
+## 🤝 Contribuição
+
+Este projeto é open source e aceita contribuições para:
+- Melhoria dos algoritmos de tradução
+- Expansão para outras lógicas formais
+- Otimização de performance
+- Novos casos de uso
+
+**Desenvolvido com 💡 Lógica Proposicional e 🚀 IA Generativa**
