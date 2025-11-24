@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agente IA - Tradutor NL/CPC</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+    <link rel="stylesheet" href="CSS/style.css">
+    <link rel="stylesheet" href="CSS/animations.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1><i class="fas fa-robot"></i> Agente IA - Tradutor NL/CPC</h1>
+            <p class="subtitle">Traduza entre Linguagem Natural (Português) e Cálculo Proposicional Clássico</p>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div class="main-content">
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-language"></i> Português para CPC
+                </div>
+                <div class="card-body">
+                    <div class="input-group">
+                        <label for="nl-input">Digite uma sentença em português:</label>
+                        <textarea id="nl-input" placeholder="Ex: Se chover, então a rua ficará molhada"></textarea>
+                    </div>
+                    <button id="nl-to-cpc-btn" class="btn">
+                        <i class="fas fa-arrow-right"></i> Traduzir para CPC
+                    </button>
+                    <div class="loader" id="nl-loader"></div>
+                    <div class="result" id="nl-result" style="display: none;">
+                        <h3>Fórmula CPC:</h3>
+                        <div class="result-content" id="nl-result-content"></div>
+                    </div>
+                    <div class="error" id="nl-error" style="display: none;"></div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-code"></i> CPC para Português
+                </div>
+                <div class="card-body">
+                    <div class="input-group">
+                        <label for="cpc-input">Digite uma fórmula CPC:</label>
+                        <input type="text" id="cpc-input" placeholder="Ex: P → Q">
+                    </div>
+                    <button id="cpc-to-nl-btn" class="btn">
+                        <i class="fas fa-arrow-right"></i> Traduzir para Português
+                    </button>
+                    <div class="loader" id="cpc-loader"></div>
+                    <div class="result" id="cpc-result" style="display: none;">
+                        <h3>Tradução em Português:</h3>
+                        <div class="result-content" id="cpc-result-content"></div>
+                    </div>
+                    <div class="error" id="cpc-error" style="display: none;"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="info-section">
+            <h2><i class="fas fa-info-circle"></i> Sobre o Cálculo Proposicional Clássico</h2>
+            <div class="info-grid">
+                <div class="info-item">
+                    <h3>Conectivos Lógicos</h3>
+                    <p>∧ (e), ∨ (ou), → (se...então), ↔ (se e somente se), ¬ (não)</p>
+                </div>
+                <div class="info-item">
+                    <h3>Proposições</h3>
+                    <p>Letras maiúsculas (P, Q, R, ...) representam proposições atômicas</p>
+                </div>
+                <div class="info-item">
+                    <h3>Precedência</h3>
+                    <p>¬ tem maior precedência, seguido por ∧, ∨, →, ↔</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="examples">
+            <h2><i class="fas fa-lightbulb"></i> Exemplos de Tradução</h2>
+            <div class="example-grid">
+                <div class="example-card">
+                    <h3>Português para CPC</h3>
+                    <p><strong>Entrada:</strong> "Se está chovendo, então a rua está molhada"</p>
+                    <p><strong>Saída:</strong> <code>P → Q</code></p>
+                </div>
+                <div class="example-card">
+                    <h3>CPC para Português</h3>
+                    <p><strong>Entrada:</strong> "P ∧ Q"</p>
+                    <p><strong>Saída:</strong> "P e Q"</p>
+                </div>
+                <div class="example-card">
+                    <h3>Exemplo Complexo</h3>
+                    <p><strong>Entrada:</strong> "Se estudo e não chove, então vou ao parque ou fico em casa"</p>
+                    <p><strong>Saída:</strong> <code>(P ∧ ¬Q) → (R ∨ S)</code></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <div class="container">
+            <p>Agente IA para Tradução entre Linguagem Natural e Cálculo Proposicional Clássico</p>
+            <p>Desenvolvido com a API Gemini</p>
+        </div>
+    </footer>
+
+    <script src="SCRIPTS/gemini-api.js"></script>
+    <script src="SCRIPTS/ui-handler.js"></script>
+    <script src="SCRIPTS/app.js"></script>
+</body>
+</html>
