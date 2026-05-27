@@ -1,403 +1,15 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Agente IA - Tradutor NL/CPC</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
-    <style>
-        :root {
-            --primary-red: #e63946;
-            --dark-red: #d00000;
-            --light-red: #ff6b6b;
-            --white: #ffffff;
-            --light-gray: #f8f9fa;
-            --medium-gray: #dee2e6;
-            --dark-gray: #6c757d;
-            --black: #212529;
-            --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        }
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        
-        body {
-            background-color: var(--light-gray);
-            color: var(--black);
-            line-height: 1.6;
-        }
-        
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        
-        header {
-            background: linear-gradient(135deg, var(--primary-red), var(--dark-red));
-            color: var(--white);
-            padding: 2rem 0;
-            text-align: center;
-            border-radius: 0 0 20px 20px;
-            box-shadow: var(--shadow);
-            margin-bottom: 2rem;
-        }
-        
-        h1 {
-            font-size: 2.5rem;
-            margin-bottom: 0.5rem;
-        }
-        
-        .subtitle {
-            font-size: 1.2rem;
-            opacity: 0.9;
-        }
-        
-        .main-content {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 2rem;
-            margin-bottom: 2rem;
-        }
-        
-        .card {
-            flex: 1;
-            min-width: 300px;
-            background-color: var(--white);
-            border-radius: 12px;
-            box-shadow: var(--shadow);
-            overflow: hidden;
-        }
-        
-        .card-header {
-            background-color: var(--primary-red);
-            color: var(--white);
-            padding: 1rem 1.5rem;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .card-body {
-            padding: 1.5rem;
-        }
-        
-        .input-group {
-            margin-bottom: 1.5rem;
-        }
-        
-        label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 600;
-            color: var(--dark-gray);
-        }
-        
-        textarea, input {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid var(--medium-gray);
-            border-radius: 8px;
-            font-size: 1rem;
-        }
-        
-        textarea:focus, input:focus {
-            outline: none;
-            border-color: var(--primary-red);
-        }
-        
-        textarea {
-            min-height: 120px;
-            resize: vertical;
-        }
-        
-        .btn {
-            background-color: var(--primary-red);
-            color: var(--white);
-            border: none;
-            padding: 12px 24px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 1rem;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            width: 100%;
-            transition: background-color 0.3s;
-        }
-        
-        .btn:hover {
-            background-color: var(--dark-red);
-        }
-        
-        .btn:disabled {
-            background-color: var(--dark-gray);
-            cursor: not-allowed;
-        }
-        
-        .result {
-            margin-top: 1.5rem;
-            padding: 1rem;
-            background-color: var(--light-gray);
-            border-radius: 8px;
-            border-left: 4px solid var(--primary-red);
-        }
-        
-        .result h3 {
-            margin-bottom: 0.5rem;
-            color: var(--dark-gray);
-        }
-        
-        .result-content {
-            font-family: monospace;
-            background-color: var(--white);
-            padding: 12px;
-            border-radius: 6px;
-            border: 1px solid var(--medium-gray);
-            font-size: 1.2rem;
-            font-weight: bold;
-            white-space: pre-wrap;
-        }
-        
-        .info-section {
-            background-color: var(--white);
-            border-radius: 12px;
-            padding: 2rem;
-            box-shadow: var(--shadow);
-            margin-bottom: 2rem;
-        }
-        
-        .info-section h2 {
-            color: var(--primary-red);
-            margin-bottom: 1.5rem;
-            text-align: center;
-        }
-        
-        .info-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
-        }
-        
-        .info-item {
-            background-color: var(--light-gray);
-            padding: 1.5rem;
-            border-radius: 8px;
-            border-left: 4px solid var(--primary-red);
-        }
-        
-        .examples {
-            background-color: var(--white);
-            border-radius: 12px;
-            padding: 2rem;
-            box-shadow: var(--shadow);
-        }
-        
-        .examples h2 {
-            color: var(--primary-red);
-            margin-bottom: 1.5rem;
-            text-align: center;
-        }
-        
-        .example-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 1.5rem;
-        }
-        
-        .example-card {
-            background-color: var(--light-gray);
-            padding: 1.5rem;
-            border-radius: 8px;
-            border: 1px solid var(--medium-gray);
-        }
-        
-        footer {
-            text-align: center;
-            padding: 2rem 0;
-            color: var(--dark-gray);
-            margin-top: 2rem;
-        }
-        
-        .loader {
-            display: none;
-            width: 30px;
-            height: 30px;
-            border: 4px solid var(--medium-gray);
-            border-top: 4px solid var(--primary-red);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin: 10px auto;
-        }
-        
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        
-        .error {
-            color: var(--dark-red);
-            background-color: rgba(230, 57, 70, 0.1);
-            padding: 12px;
-            border-radius: 8px;
-            margin-top: 1rem;
-            border-left: 4px solid var(--dark-red);
-        }
-        
-        .success {
-            color: #2a9d8f;
-            background-color: rgba(42, 157, 143, 0.1);
-            padding: 12px;
-            border-radius: 8px;
-            margin-top: 1rem;
-            border-left: 4px solid #2a9d8f;
-        }
-        
-        .symbols-help {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-top: 10px;
-            justify-content: center;
-        }
-        
-        .symbol {
-            background-color: var(--light-gray);
-            padding: 5px 10px;
-            border-radius: 5px;
-            font-family: monospace;
-            font-size: 0.9rem;
-            border: 1px solid var(--medium-gray);
-        }
-
-        /* Campo flutuante da API Key */
-        .api-key-floating {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: var(--white);
-            padding: 15px;
-            border-radius: 12px;
-            box-shadow: var(--shadow);
-            border: 2px solid var(--primary-red);
-            z-index: 1000;
-            min-width: 300px;
-            transition: transform 0.3s ease;
-        }
-
-        .api-key-floating:hover {
-            transform: translateY(-2px);
-        }
-
-        .api-key-header {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 10px;
-            color: var(--primary-red);
-            font-weight: 600;
-        }
-
-        .api-key-input-group {
-            display: flex;
-            gap: 8px;
-        }
-
-        .api-key-input {
-            flex: 1;
-            padding: 8px 12px;
-            border: 1px solid var(--medium-gray);
-            border-radius: 6px;
-            font-size: 0.9rem;
-        }
-
-        .api-key-input:focus {
-            outline: none;
-            border-color: var(--primary-red);
-        }
-
-        .api-key-btn {
-            background-color: var(--primary-red);
-            color: var(--white);
-            border: none;
-            padding: 8px 16px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            font-weight: 600;
-            transition: background-color 0.3s;
-        }
-
-        .api-key-btn:hover {
-            background-color: var(--dark-red);
-        }
-
-        .api-key-status {
-            margin-top: 8px;
-            font-size: 0.8rem;
-            text-align: center;
-            padding: 4px;
-            border-radius: 4px;
-        }
-
-        .api-key-valid {
-            background-color: rgba(42, 157, 143, 0.1);
-            color: #2a9d8f;
-        }
-
-        .api-key-invalid {
-            background-color: rgba(230, 57, 70, 0.1);
-            color: var(--dark-red);
-        }
-
-        .api-key-hidden {
-            font-family: monospace;
-            letter-spacing: 1px;
-        }
-
-        .toggle-api-key {
-            background: none;
-            border: none;
-            color: var(--dark-gray);
-            cursor: pointer;
-            font-size: 0.8rem;
-            margin-left: 5px;
-        }
-
-        .toggle-api-key:hover {
-            color: var(--primary-red);
-        }
-
-        @media (max-width: 768px) {
-            .main-content {
-                flex-direction: column;
-            }
-            
-            h1 {
-                font-size: 2rem;
-            }
-
-            .api-key-floating {
-                position: relative;
-                top: auto;
-                right: auto;
-                margin: 0 auto 20px auto;
-                width: 90%;
-                min-width: auto;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
-    <!-- Campo flutuante para API Key -->
     <div class="api-key-floating">
         <div class="api-key-header">
             <i class="fas fa-key"></i>
@@ -410,7 +22,6 @@
             </button>
         </div>
         <div id="api-key-status" class="api-key-status">
-            <!-- Status será preenchido via JavaScript -->
         </div>
     </div>
 
@@ -420,7 +31,7 @@
             <p class="subtitle">Traduza entre Linguagem Natural (Português) e Cálculo Proposicional Clássico</p>
         </div>
     </header>
-    
+
     <div class="container">
         <div class="main-content">
             <div class="card">
@@ -436,15 +47,15 @@
                         <i class="fas fa-arrow-right"></i> Traduzir para CPC
                     </button>
                     <div class="loader" id="nl-loader"></div>
-                    <div class="result" id="nl-result" style="display: none;">
+                    <div class="result" id="nl-result">
                         <h3>Fórmula CPC:</h3>
                         <div class="result-content" id="nl-result-content"></div>
                     </div>
-                    <div class="error" id="nl-error" style="display: none;"></div>
-                    <div class="success" id="nl-success" style="display: none;"></div>
+                    <div class="error" id="nl-error"></div>
+                    <div class="success" id="nl-success"></div>
                 </div>
             </div>
-            
+
             <div class="card">
                 <div class="card-header">
                     <i class="fas fa-code"></i> CPC para Português
@@ -465,16 +76,16 @@
                         <i class="fas fa-arrow-right"></i> Traduzir para Português
                     </button>
                     <div class="loader" id="cpc-loader"></div>
-                    <div class="result" id="cpc-result" style="display: none;">
+                    <div class="result" id="cpc-result">
                         <h3>Tradução em Português:</h3>
                         <div class="result-content" id="cpc-result-content"></div>
                     </div>
-                    <div class="error" id="cpc-error" style="display: none;"></div>
-                    <div class="success" id="cpc-success" style="display: none;"></div>
+                    <div class="error" id="cpc-error"></div>
+                    <div class="success" id="cpc-success"></div>
                 </div>
             </div>
         </div>
-        
+
         <div class="info-section">
             <h2><i class="fas fa-info-circle"></i> Sobre o Cálculo Proposicional Clássico</h2>
             <div class="info-grid">
@@ -492,7 +103,7 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="examples">
             <h2><i class="fas fa-lightbulb"></i> Exemplos de Tradução</h2>
             <div class="example-grid">
@@ -500,7 +111,8 @@
                     <h3>Português para CPC</h3>
                     <p><strong>Entrada:</strong> "Se está chovendo, então a rua está molhada"</p>
                     <p><strong>Saída:</strong> <code>P → Q</code></p>
-                    <button class="btn" onclick="loadExample('nl', 'Se está chovendo, então a rua está molhada')" style="margin-top: 10px;">
+                    <button class="btn example-btn" data-type="nl"
+                        data-text="Se está chovendo, então a rua está molhada">
                         <i class="fas fa-play"></i> Testar este exemplo
                     </button>
                 </div>
@@ -508,7 +120,7 @@
                     <h3>CPC para Português</h3>
                     <p><strong>Entrada:</strong> "P ∧ Q"</p>
                     <p><strong>Saída:</strong> "P e Q"</p>
-                    <button class="btn" onclick="loadExample('cpc', 'P ∧ Q')" style="margin-top: 10px;">
+                    <button class="btn example-btn" data-type="cpc" data-text="P ∧ Q">
                         <i class="fas fa-play"></i> Testar este exemplo
                     </button>
                 </div>
@@ -516,14 +128,15 @@
                     <h3>Exemplo Complexo</h3>
                     <p><strong>Entrada:</strong> "Se estudo e não chove, então vou ao parque ou fico em casa"</p>
                     <p><strong>Saída:</strong> <code>(P ∧ ¬Q) → (R ∨ S)</code></p>
-                    <button class="btn" onclick="loadExample('nl', 'Se estudo e não chove, então vou ao parque ou fico em casa')" style="margin-top: 10px;">
+                    <button class="btn example-btn" data-type="nl"
+                        data-text="Se estudo e não chove, então vou ao parque ou fico em casa">
                         <i class="fas fa-play"></i> Testar este exemplo
                     </button>
                 </div>
             </div>
         </div>
     </div>
-    
+
     <footer>
         <div class="container">
             <p>Agente IA para Tradução entre Linguagem Natural e Cálculo Proposicional Clássico</p>
@@ -531,431 +144,7 @@
         </div>
     </footer>
 
-<script>
-    // =============================================
-    // SISTEMA ATUALIZADO PARA GEMINI 2.0/2.5
-    // =============================================
-
-    let GEMINI_MODEL = 'gemini-2.0-flash-exp';
-    let GEMINI_API_KEY = '';
-    let GEMINI_API_URL = '';
-    let API_VERSION = 'v1';
-
-    // =============================================
-    // SISTEMA DE GERENCIAMENTO DA API KEY
-    // =============================================
-
-    const apiKeyElements = {
-        input: document.getElementById('api-key-input'),
-        saveBtn: document.getElementById('save-api-key'),
-        status: document.getElementById('api-key-status')
-    };
-
-    function carregarAPIKey() {
-        const savedKey = localStorage.getItem('gemini_api_key');
-        if (savedKey) {
-            GEMINI_API_KEY = savedKey;
-            atualizarStatusAPIKey(true);
-            apiKeyElements.input.value = '*'.repeat(16);
-            
-            // Carregar configurações salvas
-            const savedModel = localStorage.getItem('gemini_model');
-            const savedVersion = localStorage.getItem('gemini_api_version');
-            if (savedModel) GEMINI_MODEL = savedModel;
-            if (savedVersion) API_VERSION = savedVersion;
-            
-            // Configurar URL
-            if (GEMINI_MODEL && API_VERSION) {
-                GEMINI_API_URL = `https://generativelanguage.googleapis.com/${API_VERSION}/models/${GEMINI_MODEL}:generateContent?key=${GEMINI_API_KEY}`;
-            }
-        } else {
-            atualizarStatusAPIKey(false);
-        }
-    }
-
-    function salvarAPIKey() {
-        const key = apiKeyElements.input.value.trim();
-        
-        if (!key) {
-            mostrarMensagemAPI('Por favor, insira uma API Key válida.', 'erro');
-            return;
-        }
-
-        GEMINI_API_KEY = key;
-        localStorage.setItem('gemini_api_key', key);
-        apiKeyElements.input.value = '*'.repeat(16);
-        atualizarStatusAPIKey(true);
-        
-        configurarGemini25();
-    }
-
-    function atualizarStatusAPIKey(estaSalva) {
-        if (estaSalva) {
-            apiKeyElements.status.innerHTML = `
-                <span class="api-key-valid">
-                    <i class="fas fa-check-circle"></i> API Key configurada
-                    <button class="toggle-api-key" onclick="limparAPIKey()">
-                        <i class="fas fa-times"></i> Remover
-                    </button>
-                </span>
-            `;
-        } else {
-            apiKeyElements.status.innerHTML = `
-                <span class="api-key-invalid">
-                    <i class="fas fa-exclamation-triangle"></i> API Key não configurada
-                </span>
-            `;
-        }
-    }
-
-    function limparAPIKey() {
-        GEMINI_API_KEY = '';
-        GEMINI_API_URL = '';
-        localStorage.removeItem('gemini_api_key');
-        localStorage.removeItem('gemini_model');
-        localStorage.removeItem('gemini_api_version');
-        apiKeyElements.input.value = '';
-        atualizarStatusAPIKey(false);
-        mostrarMensagemAPI('API Key removida.', 'info');
-    }
-
-    function mostrarMensagemAPI(mensagem, tipo) {
-        document.querySelectorAll('.mensagem-flutuante').forEach(msg => msg.remove());
-        
-        const mensagemElement = document.createElement('div');
-        mensagemElement.className = 'mensagem-flutuante';
-        mensagemElement.style.cssText = `
-            position: fixed;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            padding: 12px 20px;
-            border-radius: 8px;
-            color: white;
-            font-weight: 600;
-            z-index: 10000;
-            text-align: center;
-            max-width: 90%;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-        `;
-        
-        if (tipo === 'erro') {
-            mensagemElement.style.backgroundColor = '#e63946';
-        } else if (tipo === 'sucesso') {
-            mensagemElement.style.backgroundColor = '#2a9d8f';
-        } else {
-            mensagemElement.style.backgroundColor = '#6c757d';
-        }
-        
-        mensagemElement.textContent = mensagem;
-        document.body.appendChild(mensagemElement);
-        
-        setTimeout(() => {
-            mensagemElement.remove();
-        }, 5000);
-    }
-
-    // CORREÇÃO: Configuração específica para Gemini 2.0/2.5
-    async function configurarGemini25() {
-        if (!GEMINI_API_KEY) {
-            mostrarMensagemAPI('API Key não configurada.', 'erro');
-            return false;
-        }
-
-        mostrarMensagemAPI('🚀 Configurando para Gemini 2.0/2.5...', 'info');
-
-        // Modelos disponíveis no seu projeto (do diagnóstico)
-        const modelosGemini25 = [
-            'gemini-2.0-flash',
-            'gemini-2.0-flash-001', 
-            'gemini-2.0-flash-lite',
-            'gemini-2.0-flash-lite-001',
-            'gemini-2.5-flash',
-            'gemini-2.5-flash-lite',
-            'gemini-2.5-pro'
-        ];
-
-        for (const modelo of modelosGemini25) {
-            try {
-                const urlTeste = `https://generativelanguage.googleapis.com/v1/models/${modelo}:generateContent?key=${GEMINI_API_KEY}`;
-                
-                console.log(`🧪 Testando: ${modelo}`);
-                
-                const payloadTeste = {
-                    contents: [{
-                        parts: [{
-                            text: "Responda APENAS com 'OK'"
-                        }]
-                    }],
-                    generationConfig: {
-                        maxOutputTokens: 5,
-                        temperature: 0.1
-                    }
-                };
-
-                const response = await fetch(urlTeste, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payloadTeste)
-                });
-
-                if (response.ok) {
-                    const result = await response.json();
-                    const texto = result.candidates?.[0]?.content?.parts?.[0]?.text;
-                    
-                    if (texto && texto.includes('OK')) {
-                        console.log(`✅ Modelo funcionando: ${modelo}`);
-                        
-                        GEMINI_MODEL = modelo;
-                        API_VERSION = 'v1';
-                        GEMINI_API_URL = urlTeste;
-                        
-                        localStorage.setItem('gemini_model', GEMINI_MODEL);
-                        localStorage.setItem('gemini_api_version', API_VERSION);
-                        
-                        mostrarMensagemAPI(`✅ Gemini ${modelo} configurado!`, 'sucesso');
-                        return true;
-                    }
-                } else {
-                    const errorData = await response.json();
-                    console.log(`❌ ${modelo}: ${errorData.error?.message}`);
-                }
-            } catch (error) {
-                console.log(`❌ Erro com ${modelo}:`, error.message);
-            }
-        }
-        
-        mostrarMensagemAPI('❌ Nenhum modelo Gemini 2.0/2.5 funcionou', 'erro');
-        return false;
-    }
-
-    // =============================================
-    // FUNÇÕES DE TRADUÇÃO ATUALIZADAS
-    // =============================================
-
-    async function traduzirLogica(textoEntrada, tipo) {
-        if (!GEMINI_API_KEY) {
-            throw new Error('API Key não configurada.');
-        }
-
-        if (!GEMINI_API_URL) {
-            const configurado = await configurarGemini25();
-            if (!configurado) {
-                throw new Error('Falha ao configurar a API.');
-            }
-        }
-
-        // Prompts otimizados para Gemini 2.0/2.5
-        let prompt;
-        if (tipo === 'cpc') {
-            prompt = `TRADUZA esta fórmula CPC para português natural.
-
-FÓRMULA: ${textoEntrada}
-
-REGRAS:
-- Traduza APENAS a fórmula
-- Use português claro e natural
-- Não explique nem comente
-- Responda SOMENTE com a tradução
-
-TRADUÇÃO:`;
-        } else {
-            prompt = `TRADUZA esta frase para fórmula do Cálculo Proposicional Clássico.
-
-FRASE: "${textoEntrada}"
-
-REGRAS:
-- Use símbolos: ∧ (e), ∨ (ou), → (se...então), ↔ (se e somente se), ¬ (não)
-- Use letras maiúsculas (P, Q, R...)
-- Não explique nem comente  
-- Responda SOMENTE com a fórmula
-
-FÓRMULA CPC:`;
-        }
-
-        const payload = {
-            contents: [{
-                parts: [{
-                    text: prompt
-                }]
-            }],
-            generationConfig: {
-                maxOutputTokens: 150,
-                temperature: 0.1,
-                topP: 0.8,
-                topK: 40
-            }
-        };
-
-        console.log('📤 Enviando para Gemini 2.0/2.5:', GEMINI_MODEL);
-
-        try {
-            const response = await fetch(GEMINI_API_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            });
-
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(`Erro ${response.status}: ${errorData.error?.message || 'Falha na API'}`);
-            }
-
-            const result = await response.json();
-            console.log('📥 Resposta:', result);
-
-            // Extrair texto da resposta
-            const texto = result.candidates?.[0]?.content?.parts?.[0]?.text;
-            
-            if (texto && texto.trim() !== '') {
-                console.log('✅ Texto recebido:', texto);
-                return texto.trim();
-            } else {
-                console.error('❌ Resposta vazia:', result);
-                throw new Error("Resposta vazia da API");
-            }
-        } catch (error) {
-            console.error('💥 Erro na tradução:', error);
-            throw error;
-        }
-    }
-
-    // =============================================
-    // INTERFACE DO USUÁRIO
-    // =============================================
-
-    const elementos = {
-        nlInput: document.getElementById('nl-input'),
-        nlToCpcBtn: document.getElementById('nl-to-cpc-btn'),
-        nlLoader: document.getElementById('nl-loader'),
-        nlResult: document.getElementById('nl-result'),
-        nlResultContent: document.getElementById('nl-result-content'),
-        nlError: document.getElementById('nl-error'),
-        nlSuccess: document.getElementById('nl-success'),
-        
-        cpcInput: document.getElementById('cpc-input'),
-        cpcToNlBtn: document.getElementById('cpc-to-nl-btn'),
-        cpcLoader: document.getElementById('cpc-loader'),
-        cpcResult: document.getElementById('cpc-result'),
-        cpcResultContent: document.getElementById('cpc-result-content'),
-        cpcError: document.getElementById('cpc-error'),
-        cpcSuccess: document.getElementById('cpc-success')
-    };
-
-    window.loadExample = function(tipo, texto) {
-        if (tipo === 'nl') {
-            elementos.nlInput.value = texto;
-            elementos.nlInput.focus();
-        } else {
-            elementos.cpcInput.value = texto;
-            elementos.cpcInput.focus();
-        }
-    }
-
-    window.limparAPIKey = limparAPIKey;
-
-    function mostrarElemento(elemento) {
-        if (elemento) elemento.style.display = 'block';
-    }
-
-    function esconderElemento(elemento) {
-        if (elemento) elemento.style.display = 'none';
-    }
-
-    function mostrarLoader(loader) {
-        if (loader) loader.style.display = 'block';
-        elementos.nlToCpcBtn.disabled = true;
-        elementos.cpcToNlBtn.disabled = true;
-    }
-
-    function esconderLoader(loader) {
-        if (loader) loader.style.display = 'none';
-        elementos.nlToCpcBtn.disabled = false;
-        elementos.cpcToNlBtn.disabled = false;
-    }
-
-    function mostrarErro(erroElemento, mensagem) {
-        if (erroElemento) {
-            erroElemento.textContent = mensagem;
-            mostrarElemento(erroElemento);
-        }
-    }
-
-    function mostrarSucesso(sucessoElemento, mensagem) {
-        if (sucessoElemento) {
-            sucessoElemento.textContent = mensagem;
-            mostrarElemento(sucessoElemento);
-        }
-    }
-
-    async function traduzirParaCPC() {
-        const texto = elementos.nlInput.value.trim();
-        
-        if (!texto) {
-            mostrarErro(elementos.nlError, 'Por favor, digite uma sentença em português.');
-            return;
-        }
-
-        mostrarLoader(elementos.nlLoader);
-        esconderElemento(elementos.nlResult);
-        esconderElemento(elementos.nlError);
-        esconderElemento(elementos.nlSuccess);
-
-        try {
-            const resultado = await traduzirLogica(texto, 'nl');
-            elementos.nlResultContent.textContent = resultado;
-            mostrarElemento(elementos.nlResult);
-            mostrarSucesso(elementos.nlSuccess, 'Tradução realizada com sucesso!');
-        } catch (erro) {
-            console.error('Erro na tradução:', erro);
-            mostrarErro(elementos.nlError, `Erro: ${erro.message}`);
-        } finally {
-            esconderLoader(elementos.nlLoader);
-        }
-    }
-
-    async function traduzirParaPortugues() {
-        const formula = elementos.cpcInput.value.trim();
-        
-        if (!formula) {
-            mostrarErro(elementos.cpcError, 'Por favor, digite uma fórmula CPC.');
-            return;
-        }
-
-        mostrarLoader(elementos.cpcLoader);
-        esconderElemento(elementos.cpcResult);
-        esconderElemento(elementos.cpcError);
-        esconderElemento(elementos.cpcSuccess);
-
-        try {
-            const resultado = await traduzirLogica(formula, 'cpc');
-            elementos.cpcResultContent.textContent = resultado;
-            mostrarElemento(elementos.cpcResult);
-            mostrarSucesso(elementos.cpcSuccess, 'Tradução realizada com sucesso!');
-        } catch (erro) {
-            console.error('Erro na tradução:', erro);
-            mostrarErro(elementos.cpcError, `Erro: ${erro.message}`);
-        } finally {
-            esconderLoader(elementos.cpcLoader);
-        }
-    }
-
-    // Inicializar a aplicação
-    document.addEventListener('DOMContentLoaded', function() {
-        console.log('Tradutor de Lógica Proposicional inicializado!');
-        
-        carregarAPIKey();
-        
-        apiKeyElements.saveBtn.addEventListener('click', salvarAPIKey);
-        apiKeyElements.input.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                salvarAPIKey();
-            }
-        });
-        
-        elementos.nlToCpcBtn.addEventListener('click', traduzirParaCPC);
-        elementos.cpcToNlBtn.addEventListener('click', traduzirParaPortugues);
-    });
-</script>
+    <script src="scripts.js"></script>
 </body>
+
 </html>
